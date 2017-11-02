@@ -1,0 +1,31 @@
+{% load tethys_gizmos %}
+
+<div class="table-overflow">
+    <table class="table table-striped">
+        <thead>
+            <th>Delete</th>
+            <th>ID</th>
+            <th>Name</th>
+        </thead>
+    <tbody>
+    {% for region in regions %}
+        <tr>
+            <td class="table-button"><div class=" btn-group "><a name="submit-delete-region" class="btn btn-danger submit-delete-region" role="button">
+                <span class="glyphicon glyphicon-remove"></span> Delete </a>
+                </div>
+            </td>
+            <td class="region-id">{{region.id}}</td>
+            <td class="region-name">{{region.display_name}}</td>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+</div>
+<div class="row" style="margin: auto; padding: 15px">
+    <div style="margin-left: auto;margin-right: auto">
+        <div class="col-md-4" style="text-align:right">{% gizmo button prev_button %}</div>
+        <div class="col-md-3" id="display-info" style="text-align: center"></div>
+        <div class="col-md-5" style="text-align:left">{% gizmo button next_button %}</div>
+    </div>
+</div>

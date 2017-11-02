@@ -1,0 +1,25 @@
+{% extends "grace/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+
+{% block app_content %}
+<h5>Add a Geoserver</h5>
+<em>Where the Region shapefiles are stored.</em><br/><br/>
+<div id="message" class="alert alert-danger hidden" role="alert"></div>
+{% gizmo text_input geoserver_name_input %}
+{% gizmo text_input geoserver_url_input %}
+{% gizmo text_input geoserver_username_input %}
+<div class="form-group">
+    <label class="control-label" for="geoserver-password-input">Geoserver Password</label>
+    <div class="input-group">
+        <input id="geoserver-password-input" class="form-control" name="geoserver-password-input" type="password" placeholder="e.g.: geoserver">
+        <div class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></div>
+    </div>
+</div>
+{% gizmo button add_button %}
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="{% static 'grace/js/add_geoserver.js' %}" type="text/javascript"></script>
+{% endblock %}

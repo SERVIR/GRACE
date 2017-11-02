@@ -1,0 +1,14 @@
+{% extends "grace/base.html" %}
+{% load staticfiles %}
+{% load tethys_gizmos %}
+
+{% block app_content %}
+    <div id="message" class="alert alert-danger hidden" role="alert"></div>
+    <h3>Manage Regions</h3>
+    <div id="manage_regions_table" data-page="{{ initial_page }}" data-num_regions="{{ num_regions }}"></div>
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="{% static 'grace/js/manage_regions.js' %}" type="text/javascript"></script>
+{% endblock %}

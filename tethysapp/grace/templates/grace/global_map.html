@@ -1,0 +1,195 @@
+{% extends "grace/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="https://openlayers.org/en/v4.1.1/css/ol.css" type="text/css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+{% endblock %}
+
+{% block global_scripts %}
+{{block.super}}
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script src="http://highcharts.github.io/export-csv/export-csv.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://openlayers.org/en/v4.1.1/build/ol.js"></script>
+{% endblock %}
+
+{% block after_app_content %}
+{{ block.super }}
+<style>
+    #modalUpload .modal-dialog {
+    /*width: 300px;*/
+        height:300px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.modal-header {
+    min-height: 70px;
+}
+.modal-body {
+    position: fixed;
+    top: 70px;
+    bottom: 65px;
+    right: 1px;
+    left: 0;
+    overflow-y: auto;
+}
+.modal-footer {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+    -webkit-align-content: space-between;
+    -ms-flex-line-pack: justify;
+    align-content: space-between;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 65px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+</style>
+<form id="modalUpload" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Upload Shapefile</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group shp_upload">
+                    <label class="control-label" for="shp-upload-input">Multiple Files are allowed</label>
+                    <input id="shp-upload-input" name="shp-upload-input" type="file" multiple>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="button-group">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="btn-add-shp" class="btn btn-default">Add</button>
+                </div>
+            </div>
+        </div>
+        <!--End modal content-->
+    </div>
+</form>
+
+{% endblock %}
+
+{% block app_navigation_items %}
+<li class="title">App Navigation</li>
+<li {% if request.path == '/apps/grace/' %} class="active" {% endif %}><a href="{% url 'grace:home' %}">Home</a></li>
+<li {% if 'global-map' in request.path  %} class="active" {% endif %}><a href="{% url 'grace:global-map' %}">Global Map</a></li>
+
+<br>
+{% gizmo select_input select_layer %}
+<br>
+
+<b>Map Interaction</b>
+<select id="types" class="btn btn-xs btn-success" data-width="fit">
+    <option value="None">None</option>
+    <option value="Point">Point</option>
+    <!--<option value="Polygon">Polygon</option>-->
+    <!--<option value="Upload">Upload Shapefile</option>-->
+</select>
+<br>
+
+<br>
+<form id="get-plot" name="get-plot" action="plot-global/" method="POST">
+    {% csrf_token %}
+    <input type="text" name="point-lat-lon" id="point-lat-lon" hidden>
+    <input type="text" name="poly-lat-lon" id="poly-lat-lon" hidden>
+    <input type="text" name="shp-lat-lon" id="shp-lat-lon" hidden>
+    <button type="button" id="btn-get-plot" name="btn-get-plot" class="btn btn-default">Show Plot</button>
+</form>
+<div class="warning"></div>
+<br>
+
+<!--<div align="center" class="flex-container-row"><img id="view-file-loading" class="view-file hidden" src="/static/grace/images/loader.gif" /></div>-->
+{% endblock %}
+
+{% block app_content %}
+
+<style>
+    #map{
+        width:100%;
+        height:500px;
+    }
+
+</style>
+<div id="control-bar" class="control-bar row">
+    <div class="animation col-md-2">
+        <!--<div class="btn-toolbar" role="toolbar" align="center"></div>-->
+        <div class="btn btn-success btn-group btn-xs btn-run" role="group"><span class="glyphicon glyphicon-play"></span></div>
+        <div class="btn btn-danger btn-group btn-xs btn-stop" role="group"><span class="glyphicon glyphicon-pause"></span></div>
+        <div class="btn btn-danger btn-group btn-xs btn-decrease" role="group"><span class="glyphicon glyphicon-fast-backward"></span></div>
+        <div class="btn btn-success btn-group btn-xs btn-increase" role="group"><span class="glyphicon glyphicon-fast-forward"></span></div>
+    </div>
+    <div id="slider" class="col-md-10"></div>
+</div>
+<div class="row">
+    <div class="col-md-5">     <label id="speed-label" for="speed">Animation Speed(fps):</label>
+        <input type="text" id="speed" readonly style="border:0; color:#f6931f; font-weight:normal;" value="1"></div>
+        <div class="col-md-3"><label id="label" for="grace-date">Day:</label>
+        <input type="text" id="grace-date" readonly style="border:0; color:#f6931f; font-weight:normal;" value="2002 April 16"></div>
+</div>
+<br/>
+<div id="map" class="map"></div>
+<div id="popup" class="popup"></div>
+<br>
+<b>Legend Controls</b>
+<br>
+<canvas id="cv" width="1100px" height="50px"></canvas>
+
+<div id="slider-label">
+    <div class="col-md-4">
+        <label id="opacity-label" for="opacity">Opacity:</label>
+        <input type="text" id="opacity" readonly style="border:0; color:#f6931f; font-weight:normal;" value="0.7">
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-6">
+        <label id="cbar-label" for="opacity">Colorbar Max:</label>
+        <input type="text" id="cbar-slider" readonly style="border:0; color:#f6931f; font-weight:normal;" value="50">
+    </div>
+    <div id="legend-bar"><div id="opacity-slider" class="col-md-4"></div><div class="col-md-2"></div><div id="max-slider" class="col-md-6"></div></div>
+    <br>
+</div>
+<br>
+<div id="layers" name="layers" data-slider-max="{{slider_max}}"  data-color-bar="{{color_bar}}" data-range-min="-50" data-range-max="50" style="display:none;"></div>
+
+
+<div>
+    <div class="chart-wrapper">
+        <div class="chart-inner">
+            <div align="center" class="flex-container-row"><img id="view-file-loading" class="view-file hidden" src="/static/grace/images/loader.gif" /></div>
+            <div id="plotter" name="plotter" style="height:350px;width:100%" ></div>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="{% static 'grace/js/global_map.min.js' %}" type="text/javascript"></script>
+{% endblock %}

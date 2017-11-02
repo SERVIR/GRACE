@@ -1,0 +1,76 @@
+{% extends "grace/base.html" %}
+{% load staticfiles %}
+
+{% block exit_button_override %}
+<div class="exit-button">
+<a href="javascript:void(0);" onclick="TETHYS_APP_BASE.exit_app('{% url 'app_library' %}');">Exit</a>
+</div>
+{% endblock %}
+
+{% block app_content %}
+<h1>Developers API</h1>
+<p>
+    A Developers API is provided for those who wish to incorporate the GRACE Tethys APP data into their own
+    separate application or script.
+</p>
+<br>
+<h2>API Methods</h2>
+<p>All API methods must be called using the following pattern:</p>
+<p><b>{{ host }}/apps/[parent-app]/api/[MethodName]/?param1=value1&#38;param2=value2&#38;...paramN=valueN</b></p>
+<p>See documentation and specific examples for all available methods below.</p>
+<br>
+<br>
+<h3>GetPointValues</h3>
+<table>
+    <tr>
+        <td><b>Parent App</b></td>
+        <td colspan="5">grace</td>
+    </tr>
+    <tr>
+        <th>Supported Methods</th>
+        <td colspan="5">GET</td>
+    </tr>
+    <tr>
+        <th>Returns</th>
+        <td colspan="5">A JSON object with a timeseries for a given point.</td>
+    </tr>
+    <tr>
+        <td rowspan="6"><b>Params</b></td>
+        <td><b>Name</b></td>
+        <td><b>Description</b></td>
+        <td><b>Valid Values</b></td>
+        <td><b>Required</b></td>
+    </tr>
+    <tr>
+        <td>latitude</td>
+        <td>Latitude in WGS 84 projection</td>
+        <td>Any value within the GRACE Explorer Domain (-45,45)</td>
+        <td>Yes</td>
+    </tr>
+    <tr>
+        <td>longitude</td>
+        <td>Longitude in the WGS 84 projection</td>
+        <td>Any value within the GRACE Explorer Domain (0,360)</td>
+        <td>Yes</td>
+    </tr>
+    <tr>
+        <td>start_date</td>
+        <td>Start Date for the forecast</td>
+        <td>Any date after 2002 April 4</td>
+        <td>No</td>
+    </tr>
+    <tr>
+        <td>end_date</td>
+        <td>End Date of the Forecast</td>
+        <td>Any date after the start date</td>
+        <td>No</td>
+    </tr>
+
+</table>
+<h5>Example:</h5>
+<a href="{{ host }}/apps/grace/api/GetPointValues/?latitude=20.7&longitude=80.2" target="_blank">
+    <code>{{ host }}/apps/grace/api/GetPointValues/?latitude=20.7&longitude=80.2</code>
+</a>
+
+{% endblock %}
+

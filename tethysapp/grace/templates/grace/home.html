@@ -1,0 +1,36 @@
+{% extends "grace/base.html" %}
+{% load tethys_gizmos %}
+{% load staticfiles %}
+
+
+
+{% block app_content %}
+<h1>Welcome</h1>
+<p>This app produces basic maps and timeseries using data from the <a href="https://www.jpl.nasa.gov/missions/gravity-recovery-and-climate-experiment-grace/" target="_blank">GRACE mission</a></p>
+{% if regions_length > 0 %}
+<form action="{% url 'grace:map' %}" method="get">
+    <p>Select a region from the dropdown below to view timeseries and an interactive map.</p>
+    {% gizmo select_input region_select %}
+    <div class="btn-group ">
+        <a name="submit-go-to-map" class="btn btn-success" role="button" onclick="document.forms[0].submit();" id="submit-go-to-map">
+            <span class="glyphicon glyphicon-play"></span>View Region
+        </a>
+    </div>
+</form>
+{% if user.is_superuser or user.is_staff %}
+<p class="help-block">Don't see the region you want? Add one
+    <a href="{% url 'grace:add-region' %}">here</a>.</p>
+{% endif %}
+{% else %}
+<div class="alert alert-warning" role="alert">Sorry. There appear to be no regions.</div>
+{% if user.is_superuser or user.is_staff %}
+<p>To add one click <a href="{% url 'grace:add-region' %}">here.</a>
+    {% endif %}
+    {% endif %}
+    {% endblock %}
+
+
+
+{% block app_actions %}
+
+{% endblock %}

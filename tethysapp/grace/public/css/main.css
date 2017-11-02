@@ -1,0 +1,18 @@
+.map{height:300px;width:100%}
+.btn-run{position:relative;top:-5px;}
+.btn-stop{position:relative;top:-5px;}
+.btn-increase{position:relative;top:-5px;}
+.btn-decrease{position:relative;top:-5px;}
+table, th, td{border:1px solid black;border-collapse:collapse;}
+th, td{padding:5px;text-align:left;}
+.welcome-step{font-size:18px;}
+.welcome-substep1{font-size:16px;}
+.welcome-substep2{font-size:14px;}
+#help-modal .modal-dialog{position:fixed;top:0;bottom:0;right:0;left:0;}
+#help-modal .modal-dialog{width:75%;height:75%;padding:0;}
+#help-modal .modal-body{height:100%;border-radius:0;}
+#api-modal .modal-dialog{width:75%;height:75%;padding:0;}
+#api-modal .modal-body{height:100%;border-radius:0;}
+#logos{padding:5px 0;white-space:nowrap;width:100%;display:table;}
+.logo-image{vertical-align:middle;display:table-cell;padding:0 2px;}
+.logo-image img{max-width:100%;}

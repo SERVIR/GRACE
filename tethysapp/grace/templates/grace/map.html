@@ -1,0 +1,102 @@
+{% extends "grace/base.html" %}
+{% load staticfiles %}
+{% load tethys_gizmos %}
+
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="https://openlayers.org/en/v4.1.1/css/ol.css" type="text/css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+{% endblock %}
+
+{% block global_scripts %}
+{{block.super}}
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script src="http://highcharts.github.io/export-csv/export-csv.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://openlayers.org/en/v4.1.1/build/ol.js"></script>
+{% endblock %}
+
+{% block app_navigation_items %}
+<h6>{{display_name}}</h6>
+{% gizmo select_input select_layer %}
+<br>
+<b>Map Interaction</b>
+<select id="types" class="btn btn-xs btn-success" data-width="fit">
+    <option value="None">None</option>
+    <option value="Point">Point</option>
+    <!--<option value="Polygon">Polygon</option>-->
+    <!--<option value="Upload">Upload Shapefile</option>-->
+</select>
+<br>
+<br>
+<form id="get-plot" name="get-plot" action="get_plot/" method="POST">
+    {% csrf_token %}
+    <input type="text" id="region-info" name="region-info" value="{{region_id}}" hidden>
+    <input type="text" name="point-lat-lon" id="point-lat-lon" hidden>
+    <!--<input type="text" name="poly-lat-lon" id="poly-lat-lon" hidden>-->
+    <!--<input type="text" name="shp-lat-lon" id="shp-lat-lon" hidden>-->
+    <button type="button" id="btn-get-plot" name="btn-get-plot" class="btn btn-default">Show Plot</button>
+</form>
+{% endblock%}
+
+{% block app_content %}
+<div id="control-bar" class="control-bar row">
+    <div class="animation col-md-2">
+        <!--<div class="btn-toolbar" role="toolbar" align="center"></div>-->
+        <div class="btn btn-success btn-group btn-xs btn-run" role="group"><span class="glyphicon glyphicon-play"></span></div>
+        <div class="btn btn-danger btn-group btn-xs btn-stop" role="group"><span class="glyphicon glyphicon-pause"></span></div>
+        <div class="btn btn-danger btn-group btn-xs btn-decrease" role="group"><span class="glyphicon glyphicon-fast-backward"></span></div>
+        <div class="btn btn-success btn-group btn-xs btn-increase" role="group"><span class="glyphicon glyphicon-fast-forward"></span></div>
+
+    </div>
+    <div id="slider" class="col-md-10"></div>
+</div>
+<div class="row">
+    <div class="col-md-5">     <label id="speed-label" for="speed">Animation Speed(fps):</label>
+        <input type="text" id="speed" readonly style="border:0; color:#f6931f; font-weight:normal;" value="1"></div>
+        <div class="col-md-3"><label id="label" for="grace-date">Day:</label>
+        <input type="text" id="grace-date" readonly style="border:0; color:#f6931f; font-weight:normal;" value="2002 April 16"></div>
+</div>
+
+
+<br>
+<div id="map" class="map"></div>
+<div id="popup" class="popup"></div>
+<br>
+<b>Legend Controls</b>
+<br>
+<canvas id="cv" width="1100px" height="50px"></canvas>
+
+<div id="slider-label">
+    <div class="col-md-4">
+        <label id="opacity-label" for="opacity">Opacity:</label>
+        <input type="text" id="opacity" readonly style="border:0; color:#f6931f; font-weight:normal;" value="0.7">
+    </div>
+    <div class="col-md-2"></div>
+    <div class="col-md-6">
+        <label id="cbar-label" for="opacity">Colorbar Max:</label>
+        <input type="text" id="cbar-slider" readonly style="border:0; color:#f6931f; font-weight:normal;" value="50">
+    </div>
+</div>
+    <br><br>
+    <div id="legend-bar"><div id="opacity-slider" class="col-md-4"></div><div class="col-md-2"></div><div id="max-slider" class="col-md-6"></div></div>
+<!--The div that stores important information about the layers,service folder, timestep and max depth. This will be retrieved in the JavaScript for further processing.-->
+<div id="region" name="region" data-map-center="{{map_center}}" data-wms-url="{{wms_url}}" data-layers-length="{{layers_length}}" data-range="{{range}}" data-bbox="{{bbox}}" data-tracker="{{x_tracker}}" data-range-min="-50" data-range-max="50" data-color-bar="{{color_bar}}" style="display:none;"></div>
+<br>
+    {% gizmo plot_view grace_plot %}
+<br>
+    <div>
+        <div class="chart-wrapper">
+            <div class="chart-inner">
+                <div id="plotter" name="plotter" style="height:350px;width:100%" ></div>
+            </div>
+        </div>
+    </div>
+<br><br><br><br>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+<script src="{% static 'grace/js/map.min.js' %}" type="text/javascript"></script>
+{% endblock %}
