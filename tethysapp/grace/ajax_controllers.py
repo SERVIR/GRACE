@@ -13,9 +13,12 @@ import requests, urlparse
 from gbyos import *
 import shapely.geometry
 import os
+from config import GRACE_NETCDF_DIR,GLOBAL_NETCDF_DIR
+from geoserver.catalog import Catalog
+import geoserver
 
-GRACE_NETCDF_DIR = '/grace/'
-GLOBAL_NETCDF_DIR = '/grace/global/'
+#GRACE_NETCDF_DIR = '/grace/'
+#GLOBAL_NETCDF_DIR = '/grace/global/'
 
 def plot_region(request):
     return_obj = {}
@@ -96,27 +99,6 @@ def get_plot_global(request):
             return_obj["location"] = graph["point"]
 
 
-
-        if poly_coords:
-            poly_geojson = json.loads(poly_coords)
-            # Get the bounds of the shape using shapely.geometry
-            shape_obj = shapely.geometry.asShape(poly_geojson)
-            poly_bounds = shape_obj.bounds
-            graph = process_shp(gbyos_grc_ncf, gbyos_fct_ncf, poly_bounds)
-            # graph = get_global_poly(poly_bounds)
-            graph = json.loads(graph)
-            return_obj["values"] = graph["values"]
-            return_obj["location"] = graph["point"]
-
-        if shp_bounds:
-            shp_bounds = tuple(shp_bounds.split(','))
-            # graph = get_global_poly(shp_bounds)
-
-            graph = process_shp(gbyos_grc_ncf,gbyos_fct_ncf,shp_bounds)
-            graph = json.loads(graph)
-            return_obj["values"] = graph["values"]
-            return_obj["location"] = graph["point"]
-
         return_obj['success'] = "success"
 
     return JsonResponse(return_obj)
@@ -164,8 +146,8 @@ def geoserver_add(request):
         geoserver_password = info.get('geoserver_password')
 
         try:
-            spatial_dataset_engine = GeoServerSpatialDatasetEngine(endpoint=geoserver_url,username=geoserver_username,password=geoserver_password)
-            layer_list = spatial_dataset_engine.list_layers(debug=True)
+            cat = Catalog(geoserver_url, username=geoserver_username, password=geoserver_password,disable_ssl_certificate_validation=True)
+            layer_list = cat.get_layers()
             if layer_list:
                 Session = Grace.get_persistent_store_database('main_db', as_sessionmaker=True)
                 session = Session()
@@ -174,7 +156,8 @@ def geoserver_add(request):
                 session.commit()
                 session.close()
                 response = {"data": geoserver_name, "success": "Success"}
-        except:
+        except Exception as e:
+            print e
             response={"error":"Error processing the Geoserver URL. Please check the url,username and password."}
 
 

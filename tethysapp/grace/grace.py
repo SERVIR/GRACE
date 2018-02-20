@@ -159,18 +159,7 @@ def upload_tiff(dir,region,geoserver_rest_url,workspace,uname,pwd):
     headers = {
         'Content-type': 'image/tiff',
     }
-    spatial_data_engine = GeoServerSpatialDatasetEngine(endpoint=geoserver_rest_url,username=uname,password=pwd)
 
-    #Check if workspace exists
-    ws_name = workspace
-    geoserver_uri = 'www.google.com'
-    response = spatial_data_engine.list_workspaces()
-
-    if response['success']:
-        workspaces = response['result']
-
-        if ws_name not in workspaces:
-            spatial_data_engine.create_workspace(workspace_id=ws_name,uri=geoserver_uri)
     for file in os.listdir(dir): #Looping through all the files in the given directory
         if file is None:
             print "No files. Please check directory and try again."
@@ -178,9 +167,9 @@ def upload_tiff(dir,region,geoserver_rest_url,workspace,uname,pwd):
         data = open(dir+file,'rb').read() #Read the file
         store_name = file.split('.')[0]+'_'+region #Creating the store name dynamically
 
-        request_url = '{0}workspaces/{1}/coveragestores/{2}/file.geotiff'.format(geoserver_rest_url,ws_name,store_name) #Creating the rest url
-        print request_url
-        requests.put(request_url,headers=headers,data=data,auth=(uname,pwd)) #Creating the resource on the geoserver
+        request_url = '{0}workspaces/{1}/coveragestores/{2}/file.geotiff'.format(geoserver_rest_url,workspace,store_name) #Creating the rest url
+
+        requests.put(request_url,verify=False,headers=headers,data=data,auth=(uname,pwd)) #Creating the resource on the geoserver
 
 def get_max_min(file_dir,output_dir):
     # Specify the relative file location

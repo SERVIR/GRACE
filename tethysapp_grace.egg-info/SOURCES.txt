@@ -1,11 +1,17 @@
+README.md
 setup.py
 tethysapp/__init__.py
 tethysapp/grace/__init__.py
+tethysapp/grace/ajax_controllers.py
 tethysapp/grace/api.py
 tethysapp/grace/app.py
 tethysapp/grace/controllers.py
+tethysapp/grace/gbyos.py
+tethysapp/grace/grace.py
 tethysapp/grace/handoff.py
 tethysapp/grace/model.py
+tethysapp/grace/updateGRACE.py
+tethysapp/grace/utilities.py
 tethysapp/grace/tests/__init__.py
 tethysapp/grace/tests/tests.py
 tethysapp_grace.egg-info/PKG-INFO

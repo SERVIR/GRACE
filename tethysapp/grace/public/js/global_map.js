@@ -372,7 +372,7 @@ var LIBRARY_OBJECT = (function() {
         </StyledLayerDescriptor>';
 
         wms_source = new ol.source.ImageWMS({
-            url: 'http://tethys.servirglobal.net:8181/geoserver/wms',
+            url: 'https://tethysdev.servirglobal.net/geoserver/wms',
             params: {'LAYERS':layer_name,'SLD_BODY':sld_string},
             serverType: 'geoserver',
             crossOrigin: 'Anonymous'
