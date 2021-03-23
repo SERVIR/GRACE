@@ -157,7 +157,7 @@ def geoserver_add(request):
                 session.close()
                 response = {"data": geoserver_name, "success": "Success"}
         except Exception as e:
-            print e
+            print(e)
             response={"error":"Error processing the Geoserver URL. Please check the url,username and password."}
 
 
