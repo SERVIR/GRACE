@@ -75,7 +75,7 @@ def get_netcdf_info_global(filename,var_name):
     nc_file = gdal.Open(filename)
 
     if nc_file is None:
-        print "Failed to open file, check directory and try again."
+        print("Failed to open file, check directory and try again.")
         sys.exit()
 
     #There are more than two variables, so specifying the lwe_thickness variable
@@ -104,7 +104,7 @@ def upload_global_tiff(dir,geoserver_rest_url,workspace,uname,pwd):
     dir = os.path.join(dir, '')
     for file in sorted(os.listdir(dir)): #Looping through all the files in the given directory
         if file is None:
-            print "No files. Please check directory and try again."
+            print("No files. Please check directory and try again.")
             sys.exit()
         data = open(dir+file,'rb').read() #Read the file
         store_name = file.split('.')[0]  #Creating the store name dynamically
