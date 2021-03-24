@@ -31,7 +31,7 @@ def downloadFile(grace_data_dir):
         if filename.startswith("GRCTellus") and filename.endswith(".nc"):
             local_filename = os.path.join(grace_data_dir, file_name)
             local_file = open(local_filename, 'wb')
-            print "Downloading GRACE file..."
+            print("Downloading GRACE file...")
             ftp.retrbinary('RETR ' + filename, local_file.write)
 
             local_file.close()

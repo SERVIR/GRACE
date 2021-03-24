@@ -19,7 +19,7 @@ def create_geotiffs(file_dir,geotiff_dir):
     for file in os.listdir(file_dir): #Looping through the directory
 
         if file is None:
-            print "No files to parse"
+            print("No files to parse")
             sys.exit()
         if file.endswith('.nc'):
             nc_fid = Dataset(file_dir+file,'r') #Reading the netcdf file
@@ -119,7 +119,7 @@ def create_geotiffs(file_dir,geotiff_dir):
 
                     gdal.RasterizeLayer(raster_layer, [1], source_layer, options=["ATTRIBUTE=thickness"]) #Create the GeoTiff layer
                 except:
-                    print "Error parsing the data. Please check directory and try again."
+                    print("Error parsing the data. Please check directory and try again.")
                     sys.exit()
                     return False
                 finally:
@@ -134,7 +134,7 @@ def get_netcdf_info(filename,var_name):
     nc_file = gdal.Open(filename)
 
     if nc_file is None:
-        print "Failed to open file, check directory and try again."
+        print("Failed to open file, check directory and try again.")
         sys.exit()
 
     #There are more than two variables, so specifying the lwe_thickness variable
@@ -155,14 +155,14 @@ def get_netcdf_info(filename,var_name):
 
 #Upload GeoTiffs to geoserver
 def upload_tiff(dir,region,geoserver_rest_url,workspace,uname,pwd):
-    print "just got to the upload tiff function"
+    print("just got to the upload tiff function")
     headers = {
         'Content-type': 'image/tiff',
     }
 
     for file in os.listdir(dir): #Looping through all the files in the given directory
         if file is None:
-            print "No files. Please check directory and try again."
+            print("No files. Please check directory and try again.")
             sys.exit()
         data = open(dir+file,'rb').read() #Read the file
         store_name = file.split('.')[0]+'_'+region #Creating the store name dynamically
@@ -176,7 +176,7 @@ def get_max_min(file_dir,output_dir):
     start_date = '01/01/2002'  # Date that GRACE data is available from
     for file in os.listdir(file_dir):  # Looping through the directory
         if file is None:
-            print "No files to parse"
+            print("No files to parse")
             sys.exit()
         nc_fid = Dataset(file_dir + file, 'r')  # Reading the netcdf file
         nc_var = nc_fid.variables  # Get the netCDF variables
