@@ -3,17 +3,18 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required,user_passes_test
 from django.views.decorators.csrf import csrf_exempt
 from tethys_sdk.gizmos import *
-from utilities import *
+from .utilities import *
 import json
 from tethys_dataset_services.engines import GeoServerSpatialDatasetEngine
 from sqlalchemy.orm.exc import ObjectDeletedError
 from sqlalchemy.exc import IntegrityError
-from model import *
-import requests, urlparse
-from gbyos import *
+from .model import *
+import requests
+from urllib.parse import urlparse
+from .gbyos import *
 import shapely.geometry
 import os
-from config import GRACE_NETCDF_DIR,GLOBAL_NETCDF_DIR
+from .config import GRACE_NETCDF_DIR,GLOBAL_NETCDF_DIR
 from geoserver.catalog import Catalog
 import geoserver
 

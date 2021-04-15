@@ -7,10 +7,11 @@ import os, tempfile, shutil,sys
 import gdal
 import ogr
 import osr
-import requests, urlparse
+import requests
+from urllib.parse import urlparse
 import csv
 from tethys_dataset_services.engines import GeoServerSpatialDatasetEngine
-from model import *
+from .model import *
 
 def create_geotiffs(file_dir,geotiff_dir):
 

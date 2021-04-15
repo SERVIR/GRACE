@@ -11,7 +11,7 @@ import math
 import rtree
 import csv
 import tempfile, shutil
-from grace import *
+from .grace import *
 from .app import Grace
 
 from django.http import JsonResponse, HttpResponse, Http404

@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from utilities import *
+from .utilities import *
 import json
 
 def api_get_point_values(request):

@@ -16,7 +16,7 @@ import shapely.ops
 import geojson
 import pyproj
 from pyproj import Proj, transform
-from config import GLOBAL_NETCDF_DIR
+from .config import GLOBAL_NETCDF_DIR
 
 #Check if the user is superuser or staff. Only the superuser or staff have the permission to add and manage watersheds.
 def user_permission_test(user):

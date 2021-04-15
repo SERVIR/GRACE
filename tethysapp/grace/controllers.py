@@ -4,13 +4,13 @@ from tethys_sdk.gizmos import *
 import csv, os
 from datetime import datetime,timedelta
 from tethys_sdk.services import get_spatial_dataset_engine
-import urlparse
-from grace import *
-from utilities import *
+from urllib.parse import urlparse
+from .grace import *
+from .utilities import *
 import json,time
 from .app import Grace
-from model import *
-from config import GRACE_NETCDF_DIR,GLOBAL_NETCDF_DIR
+from .model import *
+from .config import GRACE_NETCDF_DIR,GLOBAL_NETCDF_DIR
 
 NETCDF_DIR = GRACE_NETCDF_DIR
 
